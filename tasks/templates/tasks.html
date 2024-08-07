@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content%}
+
+<main class="container mt-5">
+    <select name="tasks" id="select_tasks" class="form-select w-25 mb-3">
+        <option value="all" autofocus=True>All</option>
+        <option value="completed">Completed</option>
+        <option value="pending">Pending</option>
+    </select>
+
+    <section class="row my-3" id="all_tasks">
+        <h2>All tasks</h2>
+        <div class="d-flex flex-wrap gap-3">
+            {% for task in tasks %}
+            <a class="card card-body flex-fill text-decoration-none overflow-auto"
+                href="{% url 'task_detail' task.id %}">
+                {% if task.is_important %}
+                <div class="d-flex align-items-center gap-3">
+                    <h3>{{task.title}}</h3>
+                    <div title="Important">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                {% else %}
+                <h3>{{task.title}}</h3>
+                {% endif %}
+                <p>{{task.description}}</p>
+                <p>Created at: {{task.created_at|date:'d/m/Y'}}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="row my-3" id="completed_tasks">
+        <h2>Completed tasks</h2>
+        <div class="d-flex flex-wrap gap-3">
+            {% for c_task in completed_tasks %}
+            <a class="card card-body flex-fill text-decoration-none overflow-auto"
+                href="{% url 'task_detail' c_task.id %}">
+                {% if c_task.is_important %}
+                <div class="d-flex align-items-center gap-3">
+                    <h3>{{c_task.title}}</h3>
+                    <div title="Important">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                {% else %}
+                <h3>{{c_task.title}}</h3>
+                {% endif %}
+                <p>{{c_task.description}}</p>
+                <p>Completed at: {{c_task.completed_at|date:'d/m/Y'}}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="row my-3" id="pending_tasks">
+        <h2>Pending tasks</h2>
+        <div class="d-flex flex-wrap gap-3">
+            {% for p_task in pending_tasks %}
+            <a class="card card-body flex-fill text-decoration-none overflow-auto"
+                href="{% url 'task_detail' p_task.id %}">
+                {% if p_task.is_important %}
+                <div class="d-flex align-items-center gap-3">
+                    <h3>{{p_task.title}}</h3>
+                    <div title="Important">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                {% else %}
+                <h3>{{p_task.title}}</h3>
+                {% endif %}
+                <p>{{p_task.description}}</p>
+                <p>Created at: {{p_task.created_at|date:'d/m/Y'}}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tasksSection = document.getElementById("all_tasks")
+        const completedSection = document.getElementById("completed_tasks")
+        const pendingSection = document.getElementById("pending_tasks")
+        const selectElement = document.getElementById("select_tasks")
+
+        selectElement.addEventListener('change', () => {
+            const selectedValue = selectElement.value
+
+            if (selectedValue == 'all') {
+                tasksSection.style.display = "block"
+                completedSection.style.display = "none"
+                pendingSection.style.display = "none"
+            } else if (selectedValue == "completed") {
+                tasksSection.style.display = "none"
+                completedSection.style.display = "block"
+                pendingSection.style.display = "none"
+            } else if (selectedValue == "pending") {
+                tasksSection.style.display = "none"
+                completedSection.style.display = "none"
+                pendingSection.style.display = "block"
+            }
+        })
+        selectElement.dispatchEvent(new Event('change'));
+    })
+</script>
+{% endblock %}
